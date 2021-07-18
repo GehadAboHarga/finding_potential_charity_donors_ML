@@ -8,7 +8,7 @@
 # ## Exploring the Data
 # Run the code cell below to load necessary Python libraries and load the census data. Note that the last column from this dataset, `'income'`, will be our target label (whether an individual makes more than, or at most, $50,000 annually). All other columns are features about each individual in the census database.
 
-# In[2]:
+# :
 
 
 # Import libraries necessary for this project
@@ -37,21 +37,21 @@ display(data.head(n=5))
 # - The number of individuals making at most \$50,000 annually, `'n_at_most_50k'`.
 # - The percentage of individuals making more than \$50,000 annually, `'greater_percent'`.
 # 
-# ** HINT: ** You may need to look at the table above to understand how the `'income'` entries are formatted. 
+#  You may need to look at the table above to understand how the `'income'` entries are formatted. 
 
-# In[8]:
+# :
 
 
-# TODO: Total number of records
+#  Total number of records
 n_records = data.shape[0]
 print(type(data))
-# TODO: Number of records where individual's income is more than $50,000
+#  Number of records where individual's income is more than $50,000
 n_greater_50k = data[data.income == '>50K'].shape[0] 
 
-# TODO: Number of records where individual's income is at most $50,000
+#  Number of records where individual's income is at most $50,000
 n_at_most_50k = data[data.income == '<=50K'].shape[0]
 
-# TODO: Percentage of individuals whose income is more than $50,000
+#  Percentage of individuals whose income is more than $50,000
 greater_percent = (n_greater_50k/n_records)*100
 
 # Print the results
@@ -86,7 +86,7 @@ print("Percentage of individuals making more than $50,000: {}%".format(greater_p
 # 
 # Run the code cell below to plot a histogram of these two features. Note the range of the values present and how they are distributed.
 
-# In[9]:
+# :
 
 
 # Split the data into features and target label
@@ -101,7 +101,7 @@ vs.distribution(data)
 # 
 # Run the code cell below to perform a transformation on the data and visualize the results. Again, note the range of values and how they are distributed. 
 
-# In[10]:
+# :
 
 
 # Log-transform the skewed features
@@ -118,7 +118,7 @@ vs.distribution(features_log_transformed, transformed = True)
 # 
 # Run the code cell below to normalize each numerical feature. We will use [`sklearn.preprocessing.MinMaxScaler`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html) for this.
 
-# In[11]:
+# :
 
 
 # Import sklearn.preprocessing.StandardScaler
@@ -150,13 +150,13 @@ display(features_log_minmax_transform.head(n = 5))
 #  - Convert the target label `'income_raw'` to numerical entries.
 #    - Set records with "<=50K" to `0` and records with ">50K" to `1`.
 
-# In[15]:
+# :
 
 
-# TODO: One-hot encode the 'features_log_minmax_transform' data using pandas.get_dummies()
+#  One-hot encode the 'features_log_minmax_transform' data using pandas.get_dummies()
 features_final = pd.get_dummies(features_log_minmax_transform)
 
-# TODO: Encode the 'income_raw' data to numerical values
+#  Encode the 'income_raw' data to numerical values
 income = data.income.map({'<=50K':0,'>50K':1})
 
 # Print the number of features after one-hot encoding
@@ -172,7 +172,7 @@ print (encoded)
 # 
 # Run the code cell below to perform this split.
 
-# In[17]:
+# :
 
 
 # Import train_test_split
@@ -219,17 +219,16 @@ print("Testing set has {} samples.".format(X_test.shape[0]))
 # 
 # For classification problems that are skewed in their classification distributions like in our case, for example if we had a 100 text messages and only 2 were spam and the rest 98 weren't, accuracy by itself is not a very good metric. We could classify 90 messages as not spam(including the 2 that were spam but we classify them as not spam, hence they would be false negatives) and 10 as spam(all 10 false positives) and still get a reasonably good accuracy score. For such cases, precision and recall come in very handy. These two metrics can be combined to get the F1 score, which is weighted average(harmonic mean) of the precision and recall scores. This score can range from 0 to 1, with 1 being the best possible F1 score(we take the harmonic mean as we are dealing with ratios).
 
-# ### Question 1 - Naive Predictor Performace
-# * If we chose a model that always predicted an individual made more than $50,000, what would  that model's accuracy and F-score be on this dataset? You must use the code cell below and assign your results to `'accuracy'` and `'fscore'` to be used later.
-# 
+# ###  1 - Naive Predictor Performace
+
 # ** Please note ** that the purpose of generating a naive predictor is simply to show what a base model without any intelligence would look like. In the real world, ideally your base model would be either the results of a previous model or could be based on a research paper upon which you are looking to improve. When there is no benchmark model set, getting a result better than random choice is a place you could start from.
 # 
-# ** HINT: ** 
+#  
 # 
 # * When we have a model that always predicts '1' (i.e. the individual makes more than 50k) then our model will have no True Negatives(TN) or False Negatives(FN) as we are not making any negative('0' value) predictions. Therefore our Accuracy in this case becomes the same as our Precision(True Positives/(True Positives + False Positives)) as every prediction that we have made with value '1' that should have '0' becomes a False Positive; therefore our denominator in this case is the total number of records we have in total. 
 # * Our Recall score(True Positives/(True Positives + False Negatives)) in this setting becomes 1 as we have no False Negatives.
 
-# In[24]:
+# :
 
 
 '''
@@ -240,7 +239,7 @@ FP = income.count() - TP # Specific to the naive case
 TN = 0 # No predicted negatives in the naive case
 FN = 0 # No predicted negatives in the naive case
 '''
-# TODO: Calculate accuracy, precision and recall
+#  Calculate accuracy, precision and recall
 TP = np.sum(income)
 print(TP)
 FP = int(income.count()) - TP
@@ -250,7 +249,7 @@ accuracy = TP/(TP+FP)
 recall = TP/(TP+FN)
 precision = accuracy
 
-# TODO: Calculate F-score using the formula above for beta = 0.5 and correct values for precision and recall.
+#  Calculate F-score using the formula above for beta = 0.5 and correct values for precision and recall.
 beta = 0.5
 fscore = (1+(beta*beta))*(precision*recall/((beta*beta*precision)+recall))
 
@@ -268,19 +267,15 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 # - Support Vector Machines (SVM)
 # - Logistic Regression
 
-# ### Question 2 - Model Application
+# ###  2 - Model Application
 # List three of the supervised learning models above that are appropriate for this problem that you will test on the census data. For each model chosen
 # 
-# - Describe one real-world application in industry where the model can be applied. 
-# - What are the strengths of the model; when does it perform well?
-# - What are the weaknesses of the model; when does it perform poorly?
-# - What makes this model a good candidate for the problem, given what you know about the data?
+
 # 
-# ** HINT: **
 # 
 # Structure your answer in the same format as above^, with 4 parts for each of the three models you pick. Please include references with your answer.
 
-# **Answer: **
+# 
 
 # ### Implementation - Creating a Training and Predicting Pipeline
 # To properly evaluate the performance of each model you've chosen, it's important that you create a training and predicting pipeline that allows you to quickly and effectively train models using various sizes of training data and perform predictions on the testing data. Your implementation here will be used in the following section.
@@ -293,10 +288,10 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 #  - Calculate the F-score for both the training subset and testing set.
 #    - Make sure that you set the `beta` parameter!
 
-# In[34]:
+# :
 
 
-# TODO: Import two metrics from sklearn - fbeta_score and accuracy_score
+#  Import two metrics from sklearn - fbeta_score and accuracy_score
 from sklearn.metrics import fbeta_score,accuracy_score
 
 def train_predict(learner, sample_size, X_train, y_train, X_test, y_test): 
@@ -312,34 +307,34 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     
     results = {}
     
-    # TODO: Fit the learner to the training data using slicing with 'sample_size' using .fit(training_features[:], training_labels[:])
+    #  Fit the learner to the training data using slicing with 'sample_size' using .fit(training_features[:], training_labels[:])
     start = time() # Get start time
     learner = learner.fit(X_train[:sample_size], y_train[:sample_size])
     end = time() # Get end time
     
-    # TODO: Calculate the training time
+    #  Calculate the training time
     results['train_time'] = end-start
         
-    # TODO: Get the predictions on the test set(X_test),
+    #  Get the predictions on the test set(X_test),
     #       then get predictions on the first 300 training samples(X_train) using .predict()
     start = time() # Get start time
     predictions_test = learner.predict(X_test)
     predictions_train = learner.predict(X_train[:300])
     end = time() # Get end time
     
-    # TODO: Calculate the total prediction time
+    #  Calculate the total prediction time
     results['pred_time'] = end-start
             
-    # TODO: Compute accuracy on the first 300 training samples which is y_train[:300]
+    #  Compute accuracy on the first 300 training samples which is y_train[:300]
     results['acc_train'] = accuracy_score(y_train[:300],predictions_train[:300])
         
-    # TODO: Compute accuracy on test set using accuracy_score()
+    #  Compute accuracy on test set using accuracy_score()
     results['acc_test'] = accuracy_score(y_test,predictions_test)
     
-    # TODO: Compute F-score on the the first 300 training samples using fbeta_score()
+    #  Compute F-score on the the first 300 training samples using fbeta_score()
     results['f_train'] = fbeta_score(y_train[:300],predictions_train[:300],beta = 1)
         
-    # TODO: Compute F-score on the test set which is y_test
+    #  Compute F-score on the test set which is y_test
     results['f_test'] = fbeta_score(y_test,predictions_test,beta = 1)
        
     # Success
@@ -360,24 +355,24 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
 # 
 # **Note:** Depending on which algorithms you chose, the following implementation may take some time to run!
 
-# In[39]:
+# :
 
 
-# TODO: Import the three supervised learning models from sklearn
+#  Import the three supervised learning models from sklearn
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import AdaBoostClassifier
 
-# TODO: Initialize the three models
+#  Initialize the three models
 clf_A = DecisionTreeClassifier()
 clf_B = GaussianNB()
 clf_C = AdaBoostClassifier()
 
-# TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
-# HINT: samples_100 is the entire training set i.e. len(y_train)
-# HINT: samples_10 is 10% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
-# HINT: samples_1 is 1% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
+#  Calculate the number of samples for 1%, 10%, and 100% of the training data
+# : samples_100 is the entire training set i.e. len(y_train)
+# : samples_10 is 10% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
+# : samples_1 is 1% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
 samples_100 = len(y_train)
 samples_10 = int(0.1*samples_100)
 samples_1 = int(0.01*samples_100)
@@ -398,27 +393,27 @@ vs.evaluate(results, accuracy, fscore)
 # ## Improving Results
 # In this final section, you will choose from the three supervised learning models the *best* model to use on the donor data. You will then perform a grid search optimization for the model over the entire training set (`X_train` and `y_train`) by tuning at least one parameter to improve upon the untuned model's F-score. 
 
-# ### Question 3 - Choosing the Best Model
+# ###  3 - Choosing the Best Model
 # 
 # * Based on the evaluation you performed earlier, in one to two paragraphs, explain to *CharityML* which of the three models you believe to be most appropriate for the task of identifying individuals that make more than \$50,000. 
 # 
-# ** HINT: ** 
-# Look at the graph at the bottom left from the cell above(the visualization created by `vs.evaluate(results, accuracy, fscore)`) and check the F score for the testing set when 100% of the training set is used. Which model has the highest score? Your answer should include discussion of the:
+#  
+# Look at the graph at the bottom left from the cell above(the visualization created by `vs.evaluate(results, accuracy, fscore)`) and check the F score for the testing set when 100% of the training set is used.  Your answer should include discussion of the:
 # * metrics - F score on the testing when 100% of the training data is used, 
 # * prediction/training time
 # * the algorithm's suitability for the data.
 
-# **Answer: **
+# 
 
-# ### Question 4 - Describing the Model in Layman's Terms
+# ###  4 - Describing the Model in Layman's Terms
 # 
 # * In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical jargon, such as describing equations.
 # 
-# ** HINT: **
+# 
 # 
 # When explaining your model, if using external resources please include all citations.
 
-# **Answer: ** 
+#  
 
 # ### Implementation: Model Tuning
 # Fine tune the chosen model. Use grid search (`GridSearchCV`) with at least one important parameter tuned with at least 3 different values. You will need to use the entire training set for this. In the code cell below, you will need to implement the following:
@@ -434,26 +429,26 @@ vs.evaluate(results, accuracy, fscore)
 # 
 # **Note:** Depending on the algorithm chosen and the parameter list, the following implementation may take some time to run!
 
-# In[45]:
+# :
 
 
-# TODO: Import 'GridSearchCV', 'make_scorer', and any other necessary libraries
+#  Import 'GridSearchCV', 'make_scorer', and any other necessary libraries
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer
-# TODO: Initialize the classifier
+#  Initialize the classifier
 clf = DecisionTreeClassifier()
 
-# TODO: Create the parameters list you wish to tune, using a dictionary if needed.
-# HINT: parameters = {'parameter_1': [value1, value2], 'parameter_2': [value1, value2]}
+#  Create the parameters list you wish to tune, using a dictionary if needed.
+# : parameters = {'parameter_1': [value1, value2], 'parameter_2': [value1, value2]}
 parameters = {'max_depth':[2,4,6,8,10], 'min_samples_leaf':[3,4,5,7,6,8,9]}
 
-# TODO: Make an fbeta_score scoring object using make_scorer()
+#  Make an fbeta_score scoring object using make_scorer()
 scorer = make_scorer(fbeta_score, beta=0.5)
 
-# TODO: Perform grid search on the classifier using 'scorer' as the scoring method using GridSearchCV()
+#  Perform grid search on the classifier using 'scorer' as the scoring method using GridSearchCV()
 grid_obj = GridSearchCV(clf,parameters, scoring = scorer)
 
-# TODO: Fit the grid search object to the training data and find the optimal parameters using fit()
+#  Fit the grid search object to the training data and find the optimal parameters using fit()
 grid_fit = grid_obj.fit(X_train,y_train)
 
 # Get the estimator
@@ -472,13 +467,8 @@ print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y
 print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 
 
-# ### Question 5 - Final Model Evaluation
+# ###  5 - Final Model Evaluation
 # 
-# * What is your optimized model's accuracy and F-score on the testing data? 
-# * Are these scores better or worse than the unoptimized model? 
-# * How do the results from your optimized model compare to the naive predictor benchmarks you found earlier in **Question 1**?_  
-# 
-# **Note:** Fill in the table below with your results, and then provide discussion in the **Answer** box.
 
 # #### Results:
 # 
@@ -488,7 +478,7 @@ print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 # | F-score        |                   |   EXAMPLE       |
 # 
 
-# **Answer: **
+# 
 
 # ----
 # ## Feature Importance
@@ -497,10 +487,10 @@ print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 # 
 # Choose a scikit-learn classifier (e.g., adaboost, random forests) that has a `feature_importances_` attribute, which is a function that ranks the importance of features according to the chosen classifier.  In the next python cell fit this classifier to training set and use this attribute to determine the top 5 most important features for the census dataset.
 
-# ### Question 6 - Feature Relevance Observation
-# When **Exploring the Data**, it was shown there are thirteen available features for each individual on record in the census data. Of these thirteen records, which five features do you believe to be most important for prediction, and in what order would you rank them and why?
+# ###  6 - Feature Relevance Observation
 
-# **Answer:**
+
+# ****
 
 # ### Implementation - Extracting Feature Importance
 # Choose a `scikit-learn` supervised learning algorithm that has a `feature_importances_` attribute availble for it. This attribute is a function that ranks the importance of each feature when making predictions based on the chosen algorithm.
@@ -510,35 +500,32 @@ print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 #  - Train the supervised model on the entire training set.
 #  - Extract the feature importances using `'.feature_importances_'`.
 
-# In[46]:
+# :
 
 
-# TODO: Import a supervised learning model that has 'feature_importances_'
+#  Import a supervised learning model that has 'feature_importances_'
 
 
-# TODO: Train the supervised model on the training set using .fit(X_train, y_train)
+#  Train the supervised model on the training set using .fit(X_train, y_train)
 model = None
 
-# TODO: Extract the feature importances using .feature_importances_ 
+#  Extract the feature importances using .feature_importances_ 
 importances = clf_A.feature_importances_
 
 # Plot
 vs.feature_plot(importances, X_train, y_train)
 
 
-# ### Question 7 - Extracting Feature Importance
+# ###  7 - Extracting Feature Importance
 # 
 # Observe the visualization created above which displays the five most relevant features for predicting if an individual makes at most or above \$50,000.  
-# * How do these five features compare to the five features you discussed in **Question 6**?
-# * If you were close to the same answer, how does this visualization confirm your thoughts? 
-# * If you were not close, why do you think these features are more relevant?
 
-# **Answer:**
+# ****
 
 # ### Feature Selection
-# How does a model perform if we only use a subset of all the available features in the data? With less features required to train, the expectation is that training and prediction time is much lower — at the cost of performance metrics. From the visualization above, we see that the top five most important features contribute more than half of the importance of **all** features present in the data. This hints that we can attempt to *reduce the feature space* and simplify the information required for the model to learn. The code cell below will use the same optimized model you found earlier, and train it on the same training set *with only the top five important features*. 
+# With less features required to train, the expectation is that training and prediction time is much lower — at the cost of performance metrics. From the visualization above, we see that the top five most important features contribute more than half of the importance of **all** features present in the data. This s that we can attempt to *reduce the feature space* and simplify the information required for the model to learn. The code cell below will use the same optimized model you found earlier, and train it on the same training set *with only the top five important features*. 
 
-# In[47]:
+# :
 
 
 # Import functionality for cloning a model
@@ -563,12 +550,4 @@ print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, reduced_p
 print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predictions, beta = 0.5)))
 
 
-# ### Question 8 - Effects of Feature Selection
-# 
-# * How does the final model's F-score and accuracy score on the reduced data using only five features compare to those same scores when all features are used?
-# * If training time was a factor, would you consider using the reduced data as your training set?
 
-# **Answer:**
-
-# > **Note**: Once you have completed all of the code implementations and successfully answered each question above, you may finalize your work by exporting the iPython Notebook as an HTML document. You can do this by using the menu above and navigating to  
-# **File -> Download as -> HTML (.html)**. Include the finished document along with this notebook as your submission.
